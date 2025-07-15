@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/components/home/location_widget.dart';
+import 'package:weather_app/components/home/weather_details_widget.dart';
 import 'package:weather_app/components/home/weather_widget.dart';
 import 'package:weather_app/logic/home/weather_bloc.dart';
 import 'package:weather_app/logic/home/weather_event.dart';
@@ -29,42 +31,54 @@ class HomePage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is WeatherLoaded) {
             final w = state.weather;
-
+            print(w);
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  WeatherWidget(),
-                  Text(
-                    '🕒 Time: ${w.currentTime}',
-                    style: const TextStyle(fontSize: 16),
+                  LocationWidget(),
+                  SizedBox(height: 20),
+                  WeatherWidget(
+                    temperature: w.currentTemperature,
+                    cloudCover: w.cloudCover,
+                    windSpeed: w.windSpeed,
                   ),
-                  Text('🌡 Temperature: ${w.currentTemperature}°C'),
-                  Text('🌤 Condition: ${w.getWeatherCondition()}'),
-                  Text('💨 Wind: ${w.windSpeed} km/h'),
-                  Text('🌧 Precipitation: ${w.precipitation} mm'),
-                  Text('☁️ Cloud Cover: ${w.cloudCover}%'),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Today\'s Forecast:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  SizedBox(height: 20),
+                  WeatherDetails(
+                    precipitation: w.precipitation,
+                    windSpeed: w.windSpeed,
+                    cloudCover: w.cloudCover,
                   ),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: w.todayHourly.length,
-                      itemBuilder: (context, index) {
-                        final hour = w.todayHourly[index];
-                        return ListTile(
-                          title: Text(hour.time),
-                          subtitle: Text(
-                            '${hour.temperature}°C - ${_getConditionFromCode(hour.weatherCode)}',
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  // Text(
+                  //   '🕒 Time: ${w.currentTime}',
+                  //   style: const TextStyle(fontSize: 16),
+                  // ),
+                  // Text('🌡 Temperature: ${w.currentTemperature}°C'),
+                  // Text('🌤 Condition: ${w.getWeatherCondition()}'),
+                  // Text('💨 Wind: ${w.windSpeed} km/h'),
+                  // Text('🌧 Precipitation: ${w.precipitation} mm'),
+                  // Text('☁️ Cloud Cover: ${w.cloudCover}%'),
+                  // const SizedBox(height: 20),
+                  // const Text(
+                  //   'Today\'s Forecast:',
+                  //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  // ),
+                  // const SizedBox(height: 10),
+                  // Expanded(
+                  //   child: ListView.builder(
+                  //     itemCount: w.todayHourly.length,
+                  //     itemBuilder: (context, index) {
+                  //       final hour = w.todayHourly[index];
+                  //       return ListTile(
+                  //         title: Text(hour.time),
+                  //         subtitle: Text(
+                  //           '${hour.temperature}°C - ${_getConditionFromCode(hour.weatherCode)}',
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
                 ],
               ),
             );

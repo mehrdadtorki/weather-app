@@ -6,6 +6,7 @@ import 'package:weather_app/logic/home/weather_bloc.dart';
 import 'package:weather_app/pages/home_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

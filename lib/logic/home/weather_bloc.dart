@@ -13,14 +13,6 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     on<FetchDailyWeather>((event, emit) async {
       emit(WeatherLoading());
       try {
-        print(
-          '🌍 Fetching weather for coordinates: ${event.lat}, ${event.lon}',
-        );
-        // final placemarks = await placemarkFromCoordinates(event.lat, event.lon);
-        // final locationName = placemarks.first.locality ?? 'Unknown';
-
-        // print('📍 Location: $locationName');
-
         final response = await weatherService.fetchCombinedWeather(
           latitude: event.lat,
           longitude: event.lon,

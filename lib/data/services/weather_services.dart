@@ -13,7 +13,8 @@ class WeatherServices {
         'latitude': latitude.toString(),
         'longitude': longitude.toString(),
         'current_weather': 'true',
-        'hourly': 'temperature_2m,weathercode,cloudcover,precipitation',
+        'hourly':
+            'temperature_2m,weathercode,cloudcover,precipitation,apparent_temperature,precipitation_probability',
         'timezone': 'auto',
       },
     );

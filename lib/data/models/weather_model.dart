@@ -1,3 +1,5 @@
+import 'package:weather_app/utils/get_weather_condition.dart';
+
 class HourlyWeather {
   final String time;
   final int weatherCode;
@@ -11,35 +13,33 @@ class HourlyWeather {
 }
 
 class WeatherModel {
-  // final String locationName;
   final double currentTemperature;
   final String currentTime;
   final int weatherCode;
   final double precipitation;
   final double windSpeed;
   final double cloudCover;
+  final double apparentTemperature;
+  final double precipitationProbability;
   final List<HourlyWeather> todayHourly;
 
   WeatherModel({
-    // required this.locationName,
     required this.currentTemperature,
     required this.currentTime,
     required this.weatherCode,
     required this.precipitation,
     required this.windSpeed,
     required this.cloudCover,
+    required this.apparentTemperature,
+    required this.precipitationProbability,
     required this.todayHourly,
   });
 
-  factory WeatherModel.fromJson(
-    Map<String, dynamic> json,
-    // String locationName,
-  ) {
+  factory WeatherModel.fromJson(Map<String, dynamic> json) {
     final current = json['current_weather'];
     final hourly = json['hourly'];
     final now = current['time'];
 
-    // گرفتن داده‌های امروز (فقط ساعت‌هایی که مربوط به تاریخ امروز هستند)
     List<HourlyWeather> hourlyToday = [];
     for (int i = 0; i < hourly['time'].length; i++) {
       final time = hourly['time'][i];
@@ -55,32 +55,18 @@ class WeatherModel {
     }
 
     return WeatherModel(
-      // locationName: locationName,
       currentTemperature: current['temperature'].toDouble(),
       currentTime: current['time'],
       weatherCode: current['weathercode'],
       precipitation: hourly['precipitation'][0].toDouble(),
       windSpeed: current['windspeed'].toDouble(),
       cloudCover: hourly['cloudcover'][0].toDouble(),
+      apparentTemperature: hourly[''][0].toDouble(),
+      precipitationProbability: hourly['precipitation_probability'][0]
+          .toDouble(),
       todayHourly: hourlyToday,
     );
   }
 
-  /// ابزار کمکی برای تبدیل کد به آیکون یا نام
-  String getWeatherCondition() {
-    switch (weatherCode) {
-      case 0:
-        return 'Sunny';
-      case 1:
-      case 2:
-      case 3:
-        return 'Cloudy';
-      case 61:
-      case 63:
-      case 65:
-        return 'Rainy';
-      default:
-        return 'Unknown';
-    }
-  }
+  String getWeatherCondition() => getWeatherConditionFromCode(weatherCode);
 }
