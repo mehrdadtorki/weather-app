@@ -61,7 +61,8 @@ class WeatherModel {
       precipitation: hourly['precipitation'][0].toDouble(),
       windSpeed: current['windspeed'].toDouble(),
       cloudCover: hourly['cloudcover'][0].toDouble(),
-      apparentTemperature: hourly[''][0].toDouble(),
+      apparentTemperature: hourly['apparent_temperature'][0]
+          .toDouble(), // ✅ Fixed here
       precipitationProbability: hourly['precipitation_probability'][0]
           .toDouble(),
       todayHourly: hourlyToday,

@@ -70,24 +70,29 @@ class _LocationWidgetState extends State<LocationWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Location Info
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                isLoading ? 'Locating...' : _locationName ?? 'Unknown',
-                style: const TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 4),
-              if (_locationData != null)
+          Expanded(
+            // 👈 Add this
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(
-                  'Lat: ${_locationData!.latitude?.toStringAsFixed(4)}, '
-                  'Lng: ${_locationData!.longitude?.toStringAsFixed(4)}',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                  isLoading ? 'Locating...' : _locationName ?? 'Unknown',
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
                 ),
-            ],
+                const SizedBox(height: 4),
+                if (_locationData != null)
+                  Text(
+                    'Lat: ${_locationData!.latitude?.toStringAsFixed(4)}, '
+                    'Lng: ${_locationData!.longitude?.toStringAsFixed(4)}',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                  ),
+              ],
+            ),
           ),
 
           // Static Map Image
