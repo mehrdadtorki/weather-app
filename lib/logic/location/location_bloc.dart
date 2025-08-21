@@ -1,19 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app/data/models/weather_model.dart';
-import 'package:weather_app/data/services/weather_services.dart';
-
-import 'weather_event.dart';
-import 'weather_state.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:location/location.dart' as loc;
 
-class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
-  final WeatherServices weatherService;
+import 'location_event.dart';
+import 'location_state.dart';
+
+class LocationBloc extends Bloc<LocationEvent, LocationState> {
   final loc.Location _location = loc.Location();
 
-  WeatherBloc(this.weatherService) : super(WeatherInitial()) {
-    on<FetchDailyWeather>((event, emit) async {
-      emit(WeatherLoading());
+  LocationBloc() : super(LocationInitial()) {
+    on<FetchUserLocation>((event, emit) async {
+      emit(LocationLoading());
+
       try {
         bool serviceEnabled = await _location.serviceEnabled();
         if (!serviceEnabled) {
@@ -34,23 +32,17 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         // final latitude = locationData.latitude!;
         // final longitude = locationData.longitude!;
 
-        final latitude = 68.5559424438077;
-        final longitude = 26.908298176967577;
+        final latitude = 35.720071486642276;
+        final longitude = 51.39228189520745;
 
         final placemarks = await placemarkFromCoordinates(latitude, longitude);
         final place = placemarks.first;
 
         final locationName = '${place.locality}, ${place.country}';
 
-        final response = await weatherService.fetchCombinedWeather(
-          latitude: latitude,
-          longitude: longitude,
-        );
-
-        final model = WeatherModel.fromJson(response);
-        emit(WeatherLoaded(model, locationName, latitude, longitude));
+        emit(LocationLoaded(locationName: locationName, latitude: latitude, longitude: longitude));
       } catch (e) {
-        emit(WeatherError('Failed to fetch weather: $e'));
+        emit(LocationError('Failed to get location: $e'));
       }
     });
   }

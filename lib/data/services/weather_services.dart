@@ -1,5 +1,4 @@
 import '../api/api_client.dart';
-import '../models/weather_model.dart';
 
 class WeatherServices {
   final ApiClient _api = ApiClient();

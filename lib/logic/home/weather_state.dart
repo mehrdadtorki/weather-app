@@ -8,8 +8,11 @@ class WeatherLoading extends WeatherState {}
 
 class WeatherLoaded extends WeatherState {
   final WeatherModel weather;
+  final String locationName;
+  final double latitude;
+  final double longitude;
 
-  WeatherLoaded(this.weather);
+  WeatherLoaded(this.weather, this.locationName, this.latitude, this.longitude);
 }
 
 class WeatherError extends WeatherState {

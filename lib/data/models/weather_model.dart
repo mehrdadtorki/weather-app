@@ -1,4 +1,4 @@
-import 'package:weather_app/utils/get_weather_condition.dart';
+import 'package:weather_app/utils/utils.dart';
 
 class HourlyWeather {
   final String time;
@@ -69,5 +69,6 @@ class WeatherModel {
     );
   }
 
-  String getWeatherCondition() => getWeatherConditionFromCode(weatherCode);
+  String getWeatherCondition() =>
+      Utils.getWeatherConditionFromCode(weatherCode);
 }

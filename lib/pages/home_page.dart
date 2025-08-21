@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/components/home/Future_weather_widget.dart';
 import 'package:weather_app/components/home/location_widget.dart';
 import 'package:weather_app/components/home/weather_details_widget.dart';
 import 'package:weather_app/components/home/weather_widget.dart';
@@ -7,78 +8,67 @@ import 'package:weather_app/logic/home/weather_bloc.dart';
 import 'package:weather_app/logic/home/weather_event.dart';
 import 'package:weather_app/logic/home/weather_state.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool hasFetched = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!hasFetched) {
+      context.read<WeatherBloc>().add(FetchDailyWeather(lat: 24.7, lon: 17.4));
+      hasFetched = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Weather App')),
+      appBar: AppBar(
+        shape: BeveledRectangleBorder(),
+        shadowColor: Theme.of(context).colorScheme.shadow,
+        leading: Icon(Icons.wb_sunny, color: Colors.grey.shade500),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            color: Colors.grey.shade500,
+            onPressed: () {
+              // Navigate to settings page
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            color: Colors.grey.shade500,
+            onPressed: () {
+              // Navigate to settings page
+            },
+          ),
+        ],
+        bottomOpacity: 0.5,
+      ),
       body: BlocBuilder<WeatherBloc, WeatherState>(
         builder: (context, state) {
-          if (state is WeatherInitial) {
-            return Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  context.read<WeatherBloc>().add(
-                    FetchDailyWeather(lat: 35.7, lon: 51.4),
-                  );
-                },
-                child: const Text('Load Weather'),
-              ),
-            );
-          } else if (state is WeatherLoading) {
+          if (state is WeatherLoading || state is WeatherInitial) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is WeatherLoaded) {
-            final w = state.weather;
-            print(w);
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: const [
                   LocationWidget(),
                   SizedBox(height: 20),
-                  WeatherWidget(
-                    temperature: w.currentTemperature,
-                    cloudCover: w.cloudCover,
-                    windSpeed: w.windSpeed,
-                  ),
+                  WeatherWidget(),
                   SizedBox(height: 20),
-                  WeatherDetails(
-                    precipitation: w.precipitation,
-                    windSpeed: w.windSpeed,
-                    cloudCover: w.cloudCover,
-                  ),
-                  // Text(
-                  //   '🕒 Time: ${w.currentTime}',
-                  //   style: const TextStyle(fontSize: 16),
-                  // ),
-                  // Text('🌡 Temperature: ${w.currentTemperature}°C'),
-                  // Text('🌤 Condition: ${w.getWeatherCondition()}'),
-                  // Text('💨 Wind: ${w.windSpeed} km/h'),
-                  // Text('🌧 Precipitation: ${w.precipitation} mm'),
-                  // Text('☁️ Cloud Cover: ${w.cloudCover}%'),
-                  // const SizedBox(height: 20),
-                  // const Text(
-                  //   'Today\'s Forecast:',
-                  //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  // ),
-                  // const SizedBox(height: 10),
-                  // Expanded(
-                  //   child: ListView.builder(
-                  //     itemCount: w.todayHourly.length,
-                  //     itemBuilder: (context, index) {
-                  //       final hour = w.todayHourly[index];
-                  //       return ListTile(
-                  //         title: Text(hour.time),
-                  //         subtitle: Text(
-                  //           '${hour.temperature}°C - ${_getConditionFromCode(hour.weatherCode)}',
-                  //         ),
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
+                  WeatherDetails(),
+                  SizedBox(height: 20),
+                  FutureWeather(),
                 ],
               ),
             );
@@ -90,12 +80,5 @@ class HomePage extends StatelessWidget {
         },
       ),
     );
-  }
-
-  String _getConditionFromCode(int code) {
-    if (code == 0) return 'Sunny';
-    if ([1, 2, 3].contains(code)) return 'Cloudy';
-    if ([61, 63, 65].contains(code)) return 'Rainy';
-    return 'Unknown';
   }
 }

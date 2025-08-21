@@ -1,0 +1,10 @@
+*.html linguist-generated
+*.xml linguist-generated
+*.json linguist-generated
+*.js linguist-generated
+*.css linguist-generated
+ios/* linguist-generated
+android/* linguist-generated
+web/* linguist-generated
+build/* linguist-generated
+.dart_tool/* linguist-generated
